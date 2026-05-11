@@ -1,8 +1,6 @@
 <h1>ExpNo 1 :Developing AI Agent with PEAS Description</h1>
-<h3>Name: Saravanan N</h3>
-<h3>Register Number/Staff Id: TSML006</h3>
-
-
+<h3>Name:THIRISHA A</h3>
+<h3>Register Number: 212223040228</h3>
 <h3>AIM:</h3>
 <br>
 <p>To find the PEAS description for the given AI problem and develop an AI agent.</p>
@@ -28,7 +26,7 @@
     <td><strong>Location, Temperature of patient</strong></td>
   </tr>
 </table>
-<hr>
+
 <H3>DESIGN STEPS</H3>
 <h3>STEP 1:Identifying the input:</h3>
 <p>Temperature from patients, Location.</p>
@@ -40,3 +38,92 @@
 <p>Treat unhealthy patients in each room. And check for the unhealthy patients in random room</p>
 <h3>STEP 5:</h3>
 <p>Measure the performance parameters: For each treatment performance incremented, for each movement performance decremented</p>
+
+# Program:
+```
+import random
+import time
+
+class SurveillanceAgent:
+    def __init__(self, zones):
+        self.zones = zones
+        self.performance = 0
+        
+        # Internal belief (risk score per zone)
+        self.risk_scores = {zone: 1 for zone in zones}
+        
+        # Memory of detections
+        self.history = []
+
+    def sense_environment(self, zone):
+        """
+        Simulate real-world probability of suspicious activity
+        """
+        probability = random.uniform(0, 1)
+        
+        # Higher probability zones more likely to have activity
+        threshold = 0.6 - (self.risk_scores[zone] * 0.05)
+        return probability > threshold
+
+    def choose_zone(self):
+        """
+        Choose zone with highest risk score (intelligent decision)
+        """
+        return max(self.risk_scores, key=self.risk_scores.get)
+
+    def act(self, zone, detected):
+        """
+        Take action based on detection
+        """
+        print(f"\nScanning {zone}...")
+        time.sleep(1)
+
+        if detected:
+            print(f"⚠ Suspicious activity detected in {zone}!")
+            print("Alert triggered!")
+            self.performance += 20
+            self.risk_scores[zone] += 2  # Increase confidence
+        else:
+            print(f"No suspicious activity in {zone}.")
+            
+            # Chance of false assumption (missed detection simulation)
+            if random.choice([True, False]):
+                print("Missed suspicious activity!")
+                self.performance -= 5
+                self.risk_scores[zone] += 1
+            else:
+                self.performance -= 1
+                self.risk_scores[zone] = max(1, self.risk_scores[zone] - 1)
+
+        # Movement cost
+        self.performance -= 1
+
+        # Save history
+        self.history.append((zone, detected))
+
+        print(f"Updated Risk Scores: {self.risk_scores}")
+        print(f"Current Performance: {self.performance}")
+
+    def run(self, cycles=8):
+        for _ in range(cycles):
+            zone = self.choose_zone()
+            detected = self.sense_environment(zone)
+            self.act(zone, detected)
+
+        print("\n=== FINAL REPORT ===")
+        print("Final Performance:", self.performance)
+        print("Detection History:", self.history)
+
+
+#Create and run agent
+zones = ["Zone A", "Zone B", "Zone C"]
+agent = SurveillanceAgent(zones)
+agent.run()
+```
+# Output:
+
+
+<img width="1343" height="770" alt="584612482-5a852a8b-3dc7-424f-9630-9a7e17c3a16f" src="https://github.com/user-attachments/assets/e2c5be0f-a6ec-4c71-bc2c-218eb9b52d33" />
+
+# Result:
+The intelligent surveillance agent was successfully implemented. It used internal state (risk scores), probabilistic sensing, and adaptive decision-making to improve detection efficiency and overall performance.
